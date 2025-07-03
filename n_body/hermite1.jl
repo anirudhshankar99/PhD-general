@@ -63,28 +63,31 @@ start_time = time()
 
 # --- Initial Conditions ---
 n = parse(Int, ARGS[1])
+dt = parse(Float64, ARGS[2])
+t_max = parse(Float64, ARGS[3])
+integration_steps = Int(ceil(t_max / dt))
 mass = [1.0 for _ in 1:n]
 
-pos = [[0.0 for _ in 1:3] for _ in 1:n]
-vel = [[0.0 for _ in 1:3] for _ in 1:n]
+pos = zeros(integration_steps, n, 3)
+vel = zeros(integration_steps, n, 3)
+acc = zeros(integration_steps, n, 3)
+jks = zeros(integration_steps, n, 3)
+
 for i in 1:n
     phi = i * 2 * pi / 3
-    pos[i][1] = cos(phi)
-    pos[i][2] = sin(phi)
-    pos[i][3] = 0
+    pos[1][i][1] = cos(phi)
+    pos[1][i][2] = sin(phi)
+    pos[1][i][3] = 0
 end
 
 v_abs_init = 1.0 / sqrt(sqrt(3))
 for i in 1:n
     phi = i * 2 * pi / 3
-    vel[i][1] = - v_abs_init * sin(phi)
-    vel[i][2] = v_abs_init * cos(phi)
-    vel[i][3] = 0
+    vel[1][i][1] = - v_abs_init * sin(phi)
+    vel[1][i][2] = v_abs_init * cos(phi)
+    vel[1][i][3] = 0
 end
 vel[1][1] += 0.0001
-
-dt = parse(Float64, ARGS[2])
-t_max = parse(Float64, ARGS[3])
 
 # --- Integration Loop ---
 
